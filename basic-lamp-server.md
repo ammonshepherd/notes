@@ -38,7 +38,14 @@ Use a CentOS 6 image with Vagrant (using VMBox) for a local virtual server.
 * With the Vagrant VM running and set up as above, you can now access the VM
   server at http://localhost:8080/
 
-# SSH login to Vagrant VM
+# Issues and Fixes
+
+
+## SSH login to Vagrant VM
+
+Say you want to ssh into your vagrant machine but not be in the directory where
+the Vagrant file is at? This may come up if you want another local service to
+connect to the Vagrant vm.
 
 While in the directory where the `vagrant up` command was run, also run this
 command: `vagrant ssh-key` and save the output to a file called vagrant-ssh
@@ -49,3 +56,27 @@ ssh") you can type: `ssh -F /path/to/vagrant-ssh default`
 
 
 
+## Vagrant does not mount the /vagrant folder.
+
+If after running `vagrant up` you get the following error:
+
+    default: /vagrant => /Users/aes9h/Documents/ScholarsLab/vmboxes/lamp
+    Failed to mount folders in Linux guest. This is usually because
+    the "vboxsf" file system is not available. Please verify that
+    the guest additions are properly installed in the guest and
+    can work properly. The command attempted was:
+
+    mount -t vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | cut -d: -f3` vagrant /vagrant
+    mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` vagrant /vagrant
+
+    The error output from the last command was:
+
+    /sbin/mount.vboxsf: mounting failed with the error: No such device
+
+Then one fix might be found here: https://github.com/mitchellh/vagrant/issues/1657#issuecomment-72180187
+
+Basically, you'll need to run this:
+
+    yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r) dkms
+
+Then you can exit out of the vm and run `vagrant reload`

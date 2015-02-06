@@ -12,45 +12,34 @@ Here's the workflow that capistrano helps with, and where it fits:
 
  
 # "Remote" Server Setup 
-*for developing the Capistrano workflow*
-
-## Set up PHP and Nginx
-
-Follow this how to using Vagrant and a CentOS 6 image:
-
-https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-centos-6
-
-## Vagrant Set Up
-
-I used a CentOS 6 version of Vagrant (using VMBox) for a local virtual server.
-
-* Install Vagrant: https://docs.vagrantup.com/v2/installation/index.html
-* Set up a CentOS image: https://docs.vagrantup.com/v2/getting-started/index.html
-    * Use 'chef/centos-6.6' instead of 'hashicorp/precise32'
-* Install Apache, PHP, MySQL, vim and tmux
-    * `wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm`
-    * `rpm -UVh rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm`
-    * `yum update`
-    * `yum install httpd httpd-devel php php-devel php-mysql mysql mysql-server
-    vim-enhanced tmux`
-
-### SSH login to Vagrant VM
-
-While in the directory where the ```vagrant up``` command was run, also run this
-command: ```vagrant ssh-key``` and save the output to a file called vagrant-ssh
-in that directory.
-
-To access the vagrant vm via ssh while not in that directory (not using "vagrant
-ssh") you can type: ```ssh -F /path/to/vagrant-ssh default```
-
-
+Use the steps in this tutorial to set up a testing environment:
+https://github.com/mossiso/notes/blob/master/basic-lamp-server.md
 
 
 
 # Set up Capistrano 3
 
+Capistrano requires Ruby > 1.9.3. It is highly recommended to use a Ruby
+environment manager usch as rvm, or rbenv (a list of many more:
+https://github.com/wayneeseguin/rvm/blob/master/docs/alt.md).
+
+If you have a project already started, put it under version control using git
+and github.
+
+Once all of that is set up enter the project directory and run the capistrano
+command to turn it into a capistrano project:
+
+    cap install
+
+Next up, edit the staging.rb
+
+http://capistranorb.com/documentation/getting-started/preparing-your-application/
+
 Follow this turorial:
 
 https://www.digitalocean.com/community/tutorials/how-to-automate-php-app-deployment-process-using-capistrano-on-ubuntu-13
+
+Working on this tutorial - 2/6/15 - at step Configuring Production With Capistrano
+
 
 

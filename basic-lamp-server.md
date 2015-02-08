@@ -15,7 +15,7 @@ Use a CentOS 6 image with Vagrant (using VMBox) for a local virtual server.
     * Also uncomment the line to forward port 80 on the VM to the localhost 8080
         * `  config.vm.network "forwarded_port", guest: 80, host: 8080`
 
-# Install Apache, PHP, MySQL, vim and tmux
+# Install Apache, PHP, MySQL, and other packages as needed
 * Get the RPMForge repo 
     * `wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm`
     * `rpm -UVh rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm`

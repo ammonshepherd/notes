@@ -48,11 +48,13 @@ the Vagrant file is at? This may come up if you want another local service to
 connect to the Vagrant vm.
 
 While in the directory where the `vagrant up` command was run, also run this
-command: `vagrant ssh-key` and save the output to a file called vagrant-ssh
-in that directory.
+command: `vagrant ssh-config` 
+This will output information about the ssh connection. Look for the line with
+'IdentityFile'. This should have a path to a file that contains the private key.
+You'll need this path in the ssh command you construct later.
 
 To access the vagrant vm via ssh while not in that directory (not using "vagrant
-ssh") you can type: `ssh -F /path/to/vagrant-ssh default`
+ssh") you can type: `ssh -p 2222 -i /path/to/vagrant-ssh default user@127.0.0.1`
 
 
 

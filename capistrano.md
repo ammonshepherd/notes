@@ -3,7 +3,7 @@
 Here's the workflow that capistrano helps with, and where it fits:
 
 1. Make changes on some project on your laptop/development server.
-2. Update the project's Git repository available publicly
+2. Update the project's Git repository
 3. Run capistrano on laptop/development server that will take the
    updates from the Git repo and push them to the production/staging/other
    server, and subsequently run any other arbitrary commands (like restarting

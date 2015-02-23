@@ -23,7 +23,7 @@ Use a CentOS 6 image with Vagrant (using VMBox) for a local virtual server.
     * `yum update`
 * Install the packages
     * `yum install httpd httpd-devel php php-devel php-mysql mysql mysql-server
-    vim-enhanced tmux`
+    vim-enhanced tmux man git zip unzip`
 * Start the services
     * `service httpd start`
     * `service mysqld start`

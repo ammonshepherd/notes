@@ -12,8 +12,8 @@ Use a CentOS 6 image with Vagrant (using VMBox) for a local virtual server.
 * Install Vagrant: https://docs.vagrantup.com/v2/installation/index.html
 * Set up a CentOS image: https://docs.vagrantup.com/v2/getting-started/index.html
     * Edit the 'Vagrant' file to use 'chef/centos-6.6' instead of 'hashicorp/precise32'
-    * Also uncomment the line to forward port 80 on the VM to the localhost 8080
-        * `  config.vm.network "forwarded_port", guest: 80, host: 8080`
+    * Also add the following line to use a dedicated local IP
+        * `config.vm.network "private_network", ip: "192.168.33.30"`
 
 # Install Apache, PHP, MySQL, and other packages as needed
 * Get the RPMForge repo 
@@ -36,7 +36,10 @@ Use a CentOS 6 image with Vagrant (using VMBox) for a local virtual server.
     * `chkconfig httpd on`
     * `chkconfig mysqld on`
 * With the Vagrant VM running and set up as above, you can now access the VM
-  server at http://localhost:8080/
+  server at http://192.168.33.30/
+    * You can set a name to the IP in the /etc/hosts file like so
+        * `192.168.33.30  testing.dev`
+    * Now you can access the server at http://testing.dev/
 
 # Issues and Fixes
 

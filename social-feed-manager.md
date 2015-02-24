@@ -1,10 +1,12 @@
----
-layout: page
-title:  "Social Feed Manager on CentOS 6.6"
-categories: how-to
----
+# Social Feed Manager on CentOS 6.6
 
-This tutorial is based off of the default install instructions for Social Feed Manager (found here: http://social-feed-manager.readthedocs.org/en/m5_002/install.html). The instructions there are based off of an Ubuntu install. Below are the instructions for a newly installed Centos 6.6 server.
+This tutorial is based off of the default install instructions for Social Feed
+Manager (found here:
+http://social-feed-manager.readthedocs.org/en/m5_002/install.html). 
+Much of the text is taken from the instructions there.
+
+The instructions there are based off of an Ubuntu install. Below are the
+instructions for a newly installed Centos 6.6 server.
 
 # Install Python 2.7
 
@@ -28,20 +30,6 @@ Use this tutorial: http://toomuchdata.com/2014/02/16/how-to-install-python-on-ce
     make && make altinstall
 
 
-The first time I set this up everything worked well. The next time, I had a hard time getting mod_wsgi to play nice. I used this tutorial to compile mod_wsgi to use the new installed python version. https://www.fir3net.com/Programming/Python/how-do-i-compile-modwgsi-for-python-27.html
-
-COMPILE WSGI
-
-```
-cd ~
-wget http://modwsgi.googlecode.com/files/mod_wsgi-3.4.tar.gz
-tar xvf mod_wsgi-3.4.tar.gz
-cd mod_wsgi-3.4
-
-./configure  --with-python=/usr/local/bin/python2.7
-make
-make install
-```
 
 # Install programs
 
@@ -64,15 +52,39 @@ Remember this path as the SFM data directory used in the local_settings.py file 
 
 This puts you in the new python environment. Your prompt will change to indicate that:
 
-    (ENV)[root@server social-feed-manager]#
+    (ENV) ]#
+
+To exit the python environment, type:
+
+    (ENV) ]# deactivate
+
 
 # Set up PostgreSQL
 
-Enable local connections to postgreSQL. Edit the `/var/lib/pgsql/data/pg_hba.conf` file
+If not started already, start the PostgreSQL server:
+
+    ]# service postgresql start
+
+And set it to start at server start up.
+
+    ]# chkconfig postgresql on
+
+
+Enable local connections to postgreSQL. Open the file at
+`/var/lib/pgsql/pg_hba.conf`. Find the line that starts with 'local' and comment
+it out. Duplicate the line, uncomment it, and replace 'ident' with 'md5'. Your
+new line should look like this:
+
 
     #local   all         all                               ident
     local   all         all                               md5
 
+Now you'll need to restart postgresql.
+
+    ]# service postgresql restart
+
+
+Set up the initial PostgreSQL databases
 
     ]# service postgresql initdb
 
@@ -91,22 +103,67 @@ And add a user with password (change the ALL CAPS sections to your own user and 
 
 Now log out of the postgres user by typing 'Ctrl-d' or 'exit'.
 
+
 # Finish installing the app
 
-In the social-feed-manager folder, run the following command.
+In the main social-feed-manager folder, run the following command.
 
-    ]# pip install -r requirements.txt
+    (ENV) ]# pip install -r requirements.txt
 
 
-    cd sfm
+    (ENV) ]# cd sfm
 
-    make changes to following lines in the sfm/local_settings.py file:
+Create the sfm/local_settings.py file from the template at
+sfm/local_settings.py.template
+
+    ]# cp sfm/local_settings.py.template sfm/local_settings.py
+
+Make changes to following lines in the sfm/local_settings.py file:
 
     ADMINS (specify your name and email address in the format provided)
-    DATABASES (NAME, USER, PASSWORD as you defined for postgres above; HOST should be ‘localhost’ assuming your database and application are on the same server, as per these instructions.)
-    DATA_DIR (create a directory to hold data files, then specify it here; use a new directory that is not inside the social-feed-manager directory)
-    TWITTER_DEFAULT_USER (the name of the twitter account you’ll use to connect to the API; we’ll specify the other TWITTER_* settings in a bit)
 
+    DATABASES (NAME, USER, PASSWORD as you defined for postgres above; HOST
+    should be ‘localhost’ assuming your database and application are on the same
+    server, as per these instructions.) 
+    
+    DATA_DIR (create a directory to hold data files, then specify it here; use a
+    new directory that is not inside the social-feed-manager directory)
+
+    TWITTER_DEFAULT_USER (the name of the twitter account you’ll use to connect
+    to the API) 
+    
+    TWITTER_CONSUMER_KEY && TWITTER_CONSUMER_SECRET (see below)
+
+
+## Register SFM with Twitter
+
+Register your SFM instance with Twitter’s “Application Management” page. Log in
+to Twitter using the account you specified as TWITTER_DEFAULT_USER, then visit
+this page:
+
+https://dev.twitter.com/apps/new
+Here, create an app for your instance of SFM. In addition to the required
+values, set the application type to “read only”, and give it a callback URL. The
+callback URL can be the same as your website URL, but you have to provide a
+value or the authorization loop between twitter/oauth and django-social-auth/
+sfm will not work correctly.
+
+Did you give it a callback URL? Good. It’s required. Really.
+
+When you finish this process, you’ll see a OAuth consumer key and secret for
+your SFM instance. At the time of this writing, they’re located on the “API
+Keys” tab listed as the API key and the API secret. Use these as the values for
+these two settings in local_settings.py:
+
+TWITTER_CONSUMER_KEY
+TWITTER_CONSUMER_SECRET
+These two settings along with TWITTER_DEFAULT_USERNAME should all be defined now
+with real values from your account and your SFM app’s OAuth key/secret.
+
+
+Create an sfm/wsgi.py file from the template at sfm/wsgi.py.template
+
+    ]# cp cp sfm/wsgi.py.template sfm/wsgi.py
 
 Now edit the  sfm/wsgi.py file by uncommenting out the following three lines:
 
@@ -115,33 +172,37 @@ Now edit the  sfm/wsgi.py file by uncommenting out the following three lines:
     site.addsitedir(ENV + '/lib/python2.7/site-packages')
 
 
-Now open the file at `/var/lib/pgsql/pg_hba.conf`. Find the line that starts with 'local' and comment it out. Duplicate the line, uncomment it, and replace 'ident' with 'md5'. Your new line should look like this:
 
-    local   all         all                               md5
+In the /var/www/social-feed-manager/sfm/ directory, with the python env still intact, run
 
-Now you'll need to restart postgresql.
+    (ENV) ]# ./manage.py syncdb
 
-    ]# service postgresql restart
+syncdb will use the settings you configured in local_settings.py to connect to
+the database and set up the tables SFM requires.
 
-
-# running sfm
-
-in the sfm directory, with the python env still intact, run
-
-    ]# ./manage.py syncdb
-
-give it a user name of sfmadmin, an email and password.
+This will also ask you to create a superuser. Do this, and name it **sfmadmin**.
+Don’t name it the same thing as your TWITTER_DEFAULT_USER. You will be prompted
+for an email address and password, fill these in and remember your password.
 
 Then run 
 
-    ]# ./manage.py migrate
+    (ENV) ]# ./manage.py migrate
 
 
 # Apache setup
 
-copy apache config
+Start Apache if it is not running already
 
-    cp sfm/apache.conf /etc/http/conf.d/sfm_m5_001.conf
+    ]# service httpd start
+
+And make sure it will start when the server restarts
+
+    ]# chkconfig httpd on
+
+
+Copy the Apache config
+
+    ]# cp sfm/apache.conf /etc/http/conf.d/sfm_m5_001.conf
 
 Edit appropriate settings in the new file
 
@@ -177,10 +238,53 @@ Note the added line:
 
     WSGISocketPrefix /var/run/wsgi
 
+## Install and set up mod_wsgi
+
+The first time I set this up everything worked well. The next time, I had a hard
+time getting mod_wsgi to play nice. With mod_wsgi installed with yum, the
+following errors would occur:
+
+    ImproperlyConfigured: Error loading psycopg2 module: datetime initialization failed
+
+I used this tutorial to compile mod_wsgi to use the new installed python
+version.
+https://www.fir3net.com/Programming/Python/how-do-i-compile-modwgsi-for-python-27.html
+
+
+COMPILE WSGI
+
+```
+cd ~
+wget http://modwsgi.googlecode.com/files/mod_wsgi-3.4.tar.gz
+tar xvf mod_wsgi-3.4.tar.gz
+cd mod_wsgi-3.4
+
+./configure  --with-python=/usr/local/bin/python2.7
+make
+make install
+```
+
 Create a /etc/httpd/conf.d/wsgi.conf file with this line:
 
     LoadModule wsgi_module modules/mod_wsgi.so
 
-With mod_wsgi installed with yum, the following errors would occur:
+Restart Apache
 
-    ImproperlyConfigured: Error loading psycopg2 module: datetime initialization failed
+    ]# service httpd restart
+
+# Back to the SFM tutorial
+
+Go back to the SFM tutorial and follow from the paragraph that starts: "You
+should see a blue bar at the top and a request to “Please log in” and a button
+to “Log in with Twitter". In the section "First Time Running SFM"
+
+http://social-feed-manager.readthedocs.org/en/m5_002/install.html#first-time-running-sfm
+
+
+# Daily Operations
+
+Follow instructions: http://social-feed-manager.readthedocs.org/en/m5_002/dailyops.html
+
+# Supervisord
+
+Follow instructions: http://social-feed-manager.readthedocs.org/en/m5_002/supervisor_and_streams.html

@@ -6,6 +6,8 @@ categories: how-to
 
 # tmux configuration
 
+* In your system's keyboard settings, set the Capslock key to be the same as the
+Control key
 * Put the following at ~/.tmux.conf
 
 ```
@@ -21,6 +23,8 @@ set -g status-right "#[fg=blue]#S #I:#P #[fg=yellow]| %d %b %Y #[fg=green]| %l:%
 
 # Commands
 
+* Use these keys to start using tmux 
+
 | Session Commands | Definition |
 |------------------|------------|
 | `tmux ls` | show current sessions |
@@ -28,6 +32,8 @@ set -g status-right "#[fg=blue]#S #I:#P #[fg=yellow]| %d %b %Y #[fg=green]| %l:%
 | `tmux new -s billy`   | create a new session named 'billy' |
 
 
+* To use the following commands while in tmux, hit the caps lock and 'J' key
+first, then the following key.
 
 | In Tmux Commands | Definition |
 |------------------|------------|

@@ -1,3 +1,5 @@
+# Create box from vagrant machine
+
 Creating a box from a set up vagrant machine:
 
 http://www.dev-metal.com/copy-duplicate-vagrant-box/
@@ -14,3 +16,16 @@ Now you can create virtual machines from this box by simply giving the name of t
 
 config.vm.box = "name-of-my-box"
 A config.vm.box_url is not necessary anymore.
+
+
+# SSH errors
+
+```
+The following SSH command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+/sbin/ifup eth1 2> /dev/null
+```
+
+
+    /etc/udev/rules.d/70-persistent-net.rules

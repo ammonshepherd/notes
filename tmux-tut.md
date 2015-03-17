@@ -6,6 +6,8 @@ categories: how-to
 
 # tmux configuration
 
+* Put the following at ~/.tmux.conf
+
 ```
 set -g prefix C-j
 set -g status-left-length 70

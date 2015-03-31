@@ -33,6 +33,7 @@ curl -L https://get.rvm.io | bash -s stable
 
 ```
 
+* Add vagrant user to rvm group in `/etc/group`
 
 * log out of the vagrant vm and then back in 
 

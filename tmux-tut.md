@@ -118,6 +118,7 @@ first, then the following key.
 | In Tmux Commands | Definition |
 |------------------|------------|
 | `Cap-j d` | detach from session |
+| `Cap-j [` | enter copy mode (use vim key bindings to move cursor) |
 
 
 | Window Commands  | Definition |
@@ -126,12 +127,15 @@ first, then the following key.
 | `Cap-j ,`     | rename the current window |
 | `Cap-j n`     | move to next window |
 | `Cap-j p`     | move to previous window |
+| `Cap-j [0-9]`     | move to window number [0-9] |
 | `Cap-j w`     | list the windows |
 
 
 |  Pane Commands   | Definition |
 |------------------|------------|
 | `Cap-j %`     | split vertically |
+| `Cap-j o`     | move cursor to next pane |
+| `Cap-j ;`     | move cursor to previous pane |
 
 
 |  Command Commands   | Definition |

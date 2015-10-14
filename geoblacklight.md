@@ -1,3 +1,32 @@
+# Easy Method
+
+* Clone the most recent of our version of Geoblacklight
+  https://github.com/waynegraham/geoblacklight (as of Oct 14, 2015)
+
+Do the following to set up Jetty as the webserver, and to configure Solr.
+
+  ```
+  $ cd geoblacklight
+  $ rake jetty:download
+  $ rake jetty:unzip
+  $ rake geoblacklight:configure_solr
+  ```
+Start Jetty and Solr
+
+  `rake jetty:start`
+
+Start Geoblacklight
+
+  `rails server`
+
+* The web app is at: http://localhost:3000/
+* The Solr instance is at: http://localhost:8983/solr/#/blacklight-core
+
+
+
+
+# Older ways
+
 # Vagrant
 
 For installing and setting up the latest Geoblacklight and Solr.
@@ -96,6 +125,9 @@ settings for easier connection.
     ~]$ rvm rubygems current
     ~]$ gem install rails
 
+## Install Solr and Tomcat
+
+http://andres.jaimes.net/878/setup-lucene-solr-centos-tomcat/
 
 ## Install Geoblacklight
 
@@ -105,13 +137,7 @@ settings for easier connection.
     # Change geobl to a new name for your application
     $ rails new geobl -m https://raw.githubusercontent.com/geoblacklight/geoblacklight/master/template.rb
 
-## Optional
 
-### Install Tomcat
-
-    Run with Tomcat instead of the built in Jetty webserver
-
-    ~]$ yum install tomcat6 tomcat6-lib tomcat6-servlet
 
 
 
